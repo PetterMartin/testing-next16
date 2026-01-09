@@ -1,18 +1,52 @@
-import EventCard from "@/components/EventCard";
-import ExploreBtn from "@/components/ExploreBtn";
-import { events } from "@/lib/constants";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+
+const Home = () => {
+  const shoppingItems = [
+    { name: "Melon", price: 50 },
+    { name: "Orange", price: 30 },
+    { name: "Apple", price: 40 },
+  ];
+
+  const [cart, setCart] = useState([]);
+
+  function AddToCart(item) {
+    setCart((prev) => [...prev, item]);
+  }
+
+  function highestNumber(num) {
+    return Math.max(...num);
+  }
+
   return (
     <section>
-      <h1>
-        The Hub for Every dev <br /> Event You Can&apos;t Miss
-      </h1>
-      <p>Hackathons, Meetups, and Conferences, All in one place</p>
+      <div>
+        <ul>
+          {shoppingItems.map((item) => (
+            <li key={item.name}>
+              {item.name}{" "}
+              <button
+                onClick={() => AddToCart(item)}
+                className="text-green-500"
+              >
+                Add To Cart
+              </button>
+            </li>
+          ))}
+        </ul>
 
-      <ExploreBtn />
+        <ul>
+          {cart.map((item) => (
+            <li key={item.name}>{item.name}</li>
+          ))}
+        </ul>
+      </div>
 
-      <div className="mt-20 space-y-7">
+      {/* <p>{count}</p>
+        <button onClick={() => setCount((prev) => prev + 1)}>Click here</button> */}
+
+      {/* <div className="mt-20 space-y-7">
         <h3>Featured Events</h3>
 
         <ul className="events">
@@ -22,7 +56,9 @@ export default function Home() {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
     </section>
   );
-}
+};
+
+export default Home;
