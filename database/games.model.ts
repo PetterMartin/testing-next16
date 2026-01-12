@@ -36,7 +36,6 @@ const GameSchema = new Schema<IGame>(
     },
     image: {
       type: String,
-      required: [true, "Image is required"],
       trim: true,
     },
     price: {
@@ -46,12 +45,10 @@ const GameSchema = new Schema<IGame>(
     },
     availability: {
       type: Boolean,
-      required: true,
       default: true,
     },
     location: {
       type: Number,
-      required: true,
     },
     createdAt: {
       type: Date,
