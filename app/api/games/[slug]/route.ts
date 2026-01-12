@@ -1,4 +1,3 @@
-import { v2 as cloudinary } from "cloudinary";
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Game from "@/database/games.model";
@@ -73,71 +72,6 @@ export async function GET(
     // Handle unknown errors
     return NextResponse.json(
       { message: "An unexpected error occurred" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function PATCH(
-  req: NextRequest,
-  context: { params: { slug: string } }
-) {
-  try {
-    await connectDB();
-
-    const sanitizedSlug = decodeURIComponent(context.params.slug)
-      .trim()
-      .toLowerCase();
-
-    const formData = await req.formData();
-    const updates: any = Object.fromEntries(formData.entries());
-
-    delete updates.image;
-
-    const file = formData.get("image") as File | null;
-
-    if (file && typeof file !== "string") {
-      const arrayBuffer = await file.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-
-      const uploadResult = await new Promise<any>((resolve, reject) => {
-        cloudinary.uploader
-          .upload_stream(
-            { resource_type: "image", folder: "DevEvent" },
-            (error, results) => {
-              if (error) return reject(error);
-              resolve(results);
-            }
-          )
-          .end(buffer);
-      });
-
-      updates.image = uploadResult.secure_url;
-    }
-
-    delete updates.slug;
-
-    const updatedGame = await Game.findOneAndUpdate(
-      { slug: sanitizedSlug },
-      { $set: updates },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedGame) {
-      return NextResponse.json(
-        { message: `Game with slug '${sanitizedSlug}' not found` },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(
-      { message: "Game updated successfully", game: updatedGame },
-      { status: 200 }
-    );
-  } catch (e: any) {
-    console.error(e);
-    return NextResponse.json(
-      { message: "Game update failed", error: e?.message ?? "Unknown" },
       { status: 500 }
     );
   }
