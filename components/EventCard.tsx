@@ -5,14 +5,14 @@ interface Props {
   title: string;
   image: string;
   slug: string;
-  location: string;
+  location: number;
   date: string;
   time: string;
 }
 
 const EventCard = ({ title, image, slug, location, date, time }: Props) => {
   return (
-    <Link href={`/events/${slug}`} id="event-card">
+    <Link href={`/games/${slug}`} id="game-card">
       <Image
         src={image}
         alt={title}
